@@ -232,7 +232,7 @@ const log = (extended, development) => {
         contentType: req.header("Content-Type"),
         hostname: req.hostname,
         url: req.url,
-        path: res.statusCode !== 404 ? req.route.path : 404,
+        path: res.statusCode !== 404 && req.route && req.route.path ? req.route.path : 'No Path',
         body: req.method === "POST" ? realBody : {},
         params: JSON.stringify(req.params),
         query: JSON.stringify(req.query),
@@ -267,7 +267,7 @@ const getBasic = (req, res) => {
     `Content Type: ${req.header("Content-Type") || "No content type given"}`
   );
   console.info(`Hostname: ${req.hostname}`);
-  console.info(`Path & URL: ${req.route.path} ––– ${req.url}`);
+  console.info(`Path & URL: ${req.route && req.route.path || 'No Path'} ––– ${req.url}`);
 };
 const getParameters = (req, realBody) => {
   console.log("\n--- Parameters ---\n");

@@ -1,4 +1,4 @@
-# Multilogger
+# Express-influx-multilogger
 
 An Express middleware for better monitoring of your Node.js apps.
 Parse important req, res and header objects to Influx and Grafana. Get an easier insight of your API without any costs.
@@ -9,9 +9,13 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
 
 1. Install package
    ```
-   npm install multilogger
+   npm install express-influx-multilogger
    ```
-2. Initialize database in app.js
+2. Require
+    ```
+    const multilogger = require('express-influx-multilogger');
+    ```
+3. (optional if you want to write to influx) Initialize database in app.js
    ```
    multilogger.init({
     database: {
@@ -19,10 +23,17 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
         name: "myMultilogDb",
         port: 8086
          },
-    interval: 10000 //  Write to Influx every 10 seconds
+    interval: 10000
    });
     ```
-
+4.  Add multilogger log function right before router
+    ```
+    app.use(multilogger.log({ development: false, extended: false }));
+    ```
+5.  Add multierror function before catching 404 and after your router
+    ```    
+    app.use(multilogger.error());
+    ```
 ### Example
 
 ```
@@ -39,7 +50,7 @@ multilogger.init({
         port: 8086
          },
     interval: 10000 //  Write to Influx every 10 seconds
-}); // Initialize your DB. This will write data to influx at a given interval in ms
+});
 
 const app = express();
 
@@ -47,15 +58,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// Make your log objects to console.log and/or write to Influx
 app.use(multilogger.log({ development: false, extended: false }));
 
 app.use("/", indexRouter); // Your router
 
-app.use(multilogger.error()); // To catch errors and send it to Influx as well
+app.use(multilogger.error());
 
 module.exports = app;
-
 ```
 ### Parameters
 
