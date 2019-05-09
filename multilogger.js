@@ -46,44 +46,45 @@ async function writeToDatabase(influx, name) {
             console.error(`Error creating Influx database!`);
         });
 
-    await influx
-        .writePoints([
-            {
-                measurement: "number_of_requests",
-                fields: {
-                    requests: data.length,
-                    amountOf1xx: _.size(
-                        _.filter(data, object => {
-                            return _.startsWith(object.statusCode, "1");
-                        })
-                    ),
-                    amountOf2xx: _.size(
-                        _.filter(data, object => {
-                            return _.startsWith(object.statusCode, "2");
-                        })
-                    ),
-                    amountOf3xx: _.size(
-                        _.filter(data, object => {
-                            return _.startsWith(object.statusCode, "3");
-                        })
-                    ),
-                    amountOf4xx: _.size(
-                        _.filter(data, object => {
-                            return _.startsWith(object.statusCode, "4");
-                        })
-                    ),
-                    amountOf5xx: _.size(
-                        _.filter(data, object => {
-                            return _.startsWith(object.statusCode, "5");
-                        })
-                    )
+    if (_.size(data) > 0) {
+        await influx
+            .writePoints([
+                {
+                    measurement: "number_of_requests",
+                    fields: {
+                        requests: data.length,
+                        amountOf1xx: _.size(
+                            _.filter(data, object => {
+                                return _.startsWith(object.statusCode, "1");
+                            })
+                        ),
+                        amountOf2xx: _.size(
+                            _.filter(data, object => {
+                                return _.startsWith(object.statusCode, "2");
+                            })
+                        ),
+                        amountOf3xx: _.size(
+                            _.filter(data, object => {
+                                return _.startsWith(object.statusCode, "3");
+                            })
+                        ),
+                        amountOf4xx: _.size(
+                            _.filter(data, object => {
+                                return _.startsWith(object.statusCode, "4");
+                            })
+                        ),
+                        amountOf5xx: _.size(
+                            _.filter(data, object => {
+                                return _.startsWith(object.statusCode, "5");
+                            })
+                        )
+                    }
                 }
-            }
-        ])
-        .catch(err => {
-            console.error(`Error saving data to InfluxDB! ${err.stack}`);
-        });
-
+            ])
+            .catch(err => {
+                console.error(`Error saving data to InfluxDB! ${err.stack}`);
+            });
+    }
     if (_.size(data) > 0) {
         for (const object of data) {
             await influx
