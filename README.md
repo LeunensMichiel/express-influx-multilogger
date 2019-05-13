@@ -34,6 +34,7 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
     ```    
     app.use(multilogger.error());
     ```
+6.  In case of using geolocation, make sure your server can make use of req.connection.remoteAddress
 ### Example
 
 ```
@@ -66,6 +67,41 @@ app.use(multilogger.error());
 
 module.exports = app;
 ```
+
+### Loggable headers
+Fields
+```
+    amountOf1xx: Influx.FieldType.INTEGER,
+    amountOf2xx: Influx.FieldType.INTEGER,
+    amountOf3xx: Influx.FieldType.INTEGER,
+    amountOf4xx: Influx.FieldType.INTEGER,
+    amountOf5xx: Influx.FieldType.INTEGER
+```
+```
+    responseTime: Influx.FieldType.FLOAT,
+    cpuUsage: Influx.FieldType.FLOAT,
+    memoryUsage: Influx.FieldType.FLOAT,
+    requests: Influx.FieldType.INTEGER,
+    host: Influx.FieldType.STRING,
+    ip: Influx.FieldType.STRING
+```
+Tags
+```
+    "statusCode",
+    "statusMessage",
+    "method",
+    "path",
+    "url",
+    "ip",
+    "country",
+    "geohash",
+    "client",
+    "body",
+    "query",
+    "params",
+    "errorMessage",
+    "errorStack"
+```
 ### Parameters
 
 1. Extended: Logs a pretty view of req, res and headers (defaults false)
@@ -83,11 +119,12 @@ module.exports = app;
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Dependencies
-This middleware has a dependency on systeminformation, lodash and influx
 
 *   [systeminformation](https://github.com/sebhildebrandt/systeminformation)
 *   [lodash](https://lodash.com/)
 *   [node-influx](https://www.npmjs.com/package/influx)
+*   [ngeohash](https://www.npmjs.com/package/ngeohash)
+*   [iplocation](https://www.npmjs.com/package/iplocation)
 
 ## Contributors
 *   [Michiel Cuvelier](https://github.com/cuvelierm)
