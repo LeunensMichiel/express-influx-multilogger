@@ -1,11 +1,14 @@
 const si = require("systeminformation");
 const Influx = require("influx");
 const _ = require("lodash");
+const iplocation = require("iplocation").default;
+const geohash = require("ngeohash");
+
 let data = [];
 
 module.exports = {
     init: ({
-               interval = 10000,
+               interval = 1000,
                database: {
                    server = "127.0.0.1",
                    name = "myMultilogDb",
@@ -99,14 +102,15 @@ async function writeToDatabase(influx, name) {
                             path: object.path,
                             url: object.url,
                             ip: object.ip,
+                            country: object.location.country || " ",
+                            geohash: object.location.geohash || " ",
                             client: object.clientInfo,
                             body: object.body,
                             query: object.query,
                             params: object.params,
                             errorMessage:
-                                (object.errorMessage && object.errorMessage.errorMessage) || " ",
-                            errorStack:
-                                (object.errorMessage && object.errorMessage.errorStack) || " "
+                                JSON.stringify(object.errorMessage.errorMessage) || " ",
+                            errorStack: JSON.stringify(object.errorMessage.errorStack) || " "
                         },
                         fields: {
                             responseTime: object.responseTime,
@@ -165,6 +169,8 @@ const InitDatabase = async (server, name, password, port, username) => {
                     "path",
                     "url",
                     "ip",
+                    "country",
+                    "geohash",
                     "client",
                     "body",
                     "query",
@@ -183,7 +189,7 @@ const InitDatabase = async (server, name, password, port, username) => {
 const log = (extended, development) => {
     return async (req, res, next) => {
         const startHrTime = process.hrtime();
-        const realBody = JSON.stringify(req.body) || " ";
+        const realBody = _.isEmpty(req.body) ? " " : JSON.stringify(req.body);
         const cpuUsage = await getCpuInfo();
         const memoryUsage = await getMemInfo();
 
@@ -196,13 +202,20 @@ const log = (extended, development) => {
                 getAuth(req);
                 getPerformance(cpuUsage, memoryUsage);
             }
+            const location = await iplocation(req.connection.remoteAddress)
+                .then(result => {
+                    result.geohash = geohash.encode(result.latitude, result.longitude);
+                    console.log(result);
+                    return result;
+                })
+                .catch(err => {});
             const object = {
                 method: req.method,
                 statusCode: res.statusCode,
                 statusMessage: res.statusMessage,
                 date: new Date().toUTCString(),
                 responseTime: elapsedTimeInMs,
-                contentType: req.header("Content-Type"),
+                contentType: req.header("Content-Type") || " ",
                 hostname: req.hostname,
                 url: req.url,
                 path:
@@ -213,9 +226,10 @@ const log = (extended, development) => {
                 params: _.isEmpty(req.params) ? " " : JSON.stringify(req.params),
                 query: _.isEmpty(req.query) ? " " : JSON.stringify(req.query),
                 cookies: _.isEmpty(req.cookies) ? " " : JSON.stringify(req.cookies),
-                auth: req.header("Authorization"),
-                ip: req.ip,
-                clientInfo: req.header("User-Agent"),
+                auth: req.header("Authorization") || " ",
+                ip: req.connection.remoteAddress,
+                location: location,
+                clientInfo: req.header("User-Agent") || " ",
                 memoryUsage: memoryUsage,
                 cpuUsage: cpuUsage,
                 errorMessage: res.locals.multiError || " "
