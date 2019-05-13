@@ -6,15 +6,15 @@ let data = [];
 module.exports = {
     init: ({
                interval = 10000,
-               database = {
-                   server: "127.0.0.1",
-                   name: "myMultilogDb",
-                   password: "",
-                   username: "",
-                   port: 3000
-               }
+               database: {
+                   server = "127.0.0.1",
+                   name = "myMultilogDb",
+                   password = "",
+                   port = 3000,
+                   username = ""
+               } = {}
            }) => {
-        return init(interval, database);
+        return init(interval, server, name, password, port, username);
     },
     log: ({ extended = false, development = false }) => {
         return log(extended, development);
@@ -25,11 +25,10 @@ module.exports = {
 };
 
 //  Initialize the middleware, start an interval to write de buffer data to a database of choice
-const init = (interval, database) => {
-    const { server, name, password, port, username } = database;
+const init = (interval, server, name, password, port, username) => {
     setInterval(() => {
         InitDatabase(server, name, password, port, username).catch(err =>
-            console.error(err.message)
+            console.error(err.stack)
         );
     }, interval);
 };
@@ -78,13 +77,15 @@ async function writeToDatabase(influx, name) {
                                 return _.startsWith(object.statusCode, "5");
                             })
                         )
-                    }
+                    },
+                    tags: {}
                 }
             ])
             .catch(err => {
                 console.error(`Error saving data to InfluxDB! ${err.stack}`);
             });
     }
+
     if (_.size(data) > 0) {
         for (const object of data) {
             await influx
@@ -103,9 +104,9 @@ async function writeToDatabase(influx, name) {
                             query: object.query,
                             params: object.params,
                             errorMessage:
-                                (object.errorMessage && object.errorMessage.errorMessage) || "",
+                                (object.errorMessage && object.errorMessage.errorMessage) || " ",
                             errorStack:
-                                (object.errorMessage && object.errorMessage.errorStack) || ""
+                                (object.errorMessage && object.errorMessage.errorStack) || " "
                         },
                         fields: {
                             responseTime: object.responseTime,
@@ -144,7 +145,8 @@ const InitDatabase = async (server, name, password, port, username) => {
                     amountOf3xx: Influx.FieldType.INTEGER,
                     amountOf4xx: Influx.FieldType.INTEGER,
                     amountOf5xx: Influx.FieldType.INTEGER
-                }
+                },
+                tags: []
             },
             {
                 measurement: "multilogger",
@@ -181,7 +183,7 @@ const InitDatabase = async (server, name, password, port, username) => {
 const log = (extended, development) => {
     return async (req, res, next) => {
         const startHrTime = process.hrtime();
-        const realBody = JSON.stringify(req.body) || "";
+        const realBody = JSON.stringify(req.body) || " ";
         const cpuUsage = await getCpuInfo();
         const memoryUsage = await getMemInfo();
 
@@ -207,16 +209,16 @@ const log = (extended, development) => {
                     res.statusCode !== 404 && req.route && req.route.path
                         ? req.route.path
                         : "No Path",
-                body: req.method === "POST" ? realBody : "",
-                params: JSON.stringify(req.params),
-                query: JSON.stringify(req.query),
-                cookies: JSON.stringify(req.cookies),
+                body: req.method === "POST" ? realBody : " ",
+                params: _.isEmpty(req.params) ? " " : JSON.stringify(req.params),
+                query: _.isEmpty(req.query) ? " " : JSON.stringify(req.query),
+                cookies: _.isEmpty(req.cookies) ? " " : JSON.stringify(req.cookies),
                 auth: req.header("Authorization"),
                 ip: req.ip,
                 clientInfo: req.header("User-Agent"),
-                memoryUsage: JSON.stringify(memoryUsage),
-                cpuUsage: JSON.stringify(cpuUsage),
-                errorMessage: res.locals.multiError || ""
+                memoryUsage: memoryUsage,
+                cpuUsage: cpuUsage,
+                errorMessage: res.locals.multiError || " "
             };
             if (development) {
                 console.log(object);
