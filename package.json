@@ -1,6 +1,6 @@
 {
   "name": "express-influx-multilogger",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "An express.js middleware for getting detailed views of your API Calls and sending it to an Influx database of choice for Grafana",
   "main": "multilogger.js",
   "scripts": {
@@ -19,10 +19,14 @@
   "license": "MIT",
   "dependencies": {
     "influx": "^5.0.7",
-    "lodash": "^4.17.11",
-    "systeminformation": "^4.1.6",
     "iplocation": "^6.1.0",
-    "ngeohash": "^0.6.3"
+    "lodash": "^4.17.11",
+    "ngeohash": "^0.6.3",
+    "systeminformation": "^4.1.6"
+  },
+  "devDependencies": {
+    "prettier": "^1.17.1",
+    "express": "~4.16.0"
   },
   "homepage": "https://github.com/LeunensMichiel/express-influx-multilogger",
   "repository": {
