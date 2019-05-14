@@ -1,6 +1,6 @@
 {
   "name": "express-influx-multilogger",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "An express.js middleware for getting detailed views of your API Calls and sending it to an Influx database of choice for Grafana",
   "main": "multilogger.js",
   "scripts": {
