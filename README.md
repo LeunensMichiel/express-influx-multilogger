@@ -10,8 +10,13 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
 ### Installation
 
 1. Install package
+   Npm
    ```
    npm install express-influx-multilogger
+   ```
+   Yarn
+   ```
+   yarn add express-influx-multilogger
    ```
 2. Require
    ```
