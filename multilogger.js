@@ -23,7 +23,7 @@ module.exports = {
     );
   },
   log: ({ extended = true, development = false }) => {
-    return logger(extended, development);
+    return logger.log(extended, development);
   },
   error: () => {
     return multiError();
@@ -37,7 +37,12 @@ module.exports = {
   getData: () => {
     return data;
   },
+  insertDatabaseCallSpeed: object => {
+    return logger.addToObject(object)
+  }
 };
+
+const _ = require("lodash");
 
 const logger = require("./lib/Logger");
 const multiError = require("./lib/MultiError");
