@@ -36,7 +36,7 @@ module.exports = {
   },
   getData: () => {
     return data;
-  }
+  },
 };
 
 const logger = require("./lib/Logger");
