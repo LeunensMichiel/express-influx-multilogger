@@ -42,6 +42,19 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
    app.use(multilogger.error());
    ```
 6. In case of using geolocation, make sure your server can make use of req.connection.remoteAddress
+7. You can also add extra custom metrics for monitoring other things, like your database calls
+   
+   Add this line in your code (make sure you require multilogger). Name and timing parameters are required. Custom is        optional.
+   ```
+    multilogger.insertDatabaseCallSpeed({
+      name: "Random name", // name of your metric (like a database call)
+      timing: 0.2443, //in ms
+      custom: {
+        customOption1: "dead",
+        foo: foo.bar,
+      }
+    });
+   ```
 
 ### Example
 
