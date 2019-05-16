@@ -206,19 +206,25 @@
           "select": [
             [
               {
-                "params": ["ip"],
+                "params": [
+                  "ip"
+                ],
                 "type": "field"
               }
             ],
             [
               {
-                "params": ["responseTime"],
+                "params": [
+                  "responseTime"
+                ],
                 "type": "field"
               }
             ],
             [
               {
-                "params": ["host"],
+                "params": [
+                  "host"
+                ],
                 "type": "field"
               }
             ]
@@ -254,6 +260,7 @@
         "y": 0
       },
       "id": 2,
+      "interval": "10s",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -283,11 +290,15 @@
           "alias": "Number of Requests",
           "groupBy": [
             {
-              "params": ["10s"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["0"],
+              "params": [
+                "0"
+              ],
               "type": "fill"
             }
           ],
@@ -301,7 +312,9 @@
           "select": [
             [
               {
-                "params": ["requests"],
+                "params": [
+                  "requests"
+                ],
                 "type": "field"
               },
               {
@@ -316,11 +329,15 @@
           "alias": "1xx Requests",
           "groupBy": [
             {
-              "params": ["10s"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["0"],
+              "params": [
+                "0"
+              ],
               "type": "fill"
             }
           ],
@@ -332,7 +349,9 @@
           "select": [
             [
               {
-                "params": ["amountOf1xx"],
+                "params": [
+                  "amountOf1xx"
+                ],
                 "type": "field"
               },
               {
@@ -347,11 +366,15 @@
           "alias": "2xx Requests",
           "groupBy": [
             {
-              "params": ["10s"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["0"],
+              "params": [
+                "0"
+              ],
               "type": "fill"
             }
           ],
@@ -363,7 +386,9 @@
           "select": [
             [
               {
-                "params": ["amountOf2xx"],
+                "params": [
+                  "amountOf2xx"
+                ],
                 "type": "field"
               },
               {
@@ -378,11 +403,15 @@
           "alias": "3xx Requests",
           "groupBy": [
             {
-              "params": ["10s"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["0"],
+              "params": [
+                "0"
+              ],
               "type": "fill"
             }
           ],
@@ -394,7 +423,9 @@
           "select": [
             [
               {
-                "params": ["amountOf3xx"],
+                "params": [
+                  "amountOf3xx"
+                ],
                 "type": "field"
               },
               {
@@ -409,11 +440,15 @@
           "alias": "4xx Requests",
           "groupBy": [
             {
-              "params": ["10s"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["0"],
+              "params": [
+                "0"
+              ],
               "type": "fill"
             }
           ],
@@ -425,7 +460,9 @@
           "select": [
             [
               {
-                "params": ["amountOf4xx"],
+                "params": [
+                  "amountOf4xx"
+                ],
                 "type": "field"
               },
               {
@@ -440,11 +477,15 @@
           "alias": "5xx Requests",
           "groupBy": [
             {
-              "params": ["10s"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["0"],
+              "params": [
+                "0"
+              ],
               "type": "fill"
             }
           ],
@@ -456,7 +497,9 @@
           "select": [
             [
               {
-                "params": ["amountOf5xx"],
+                "params": [
+                  "amountOf5xx"
+                ],
                 "type": "field"
               },
               {
@@ -528,7 +571,7 @@
       "scroll": true,
       "showHeader": true,
       "sort": {
-        "col": 6,
+        "col": 0,
         "desc": true
       },
       "styles": [
@@ -553,7 +596,9 @@
           "pattern": "body",
           "preserveFormat": true,
           "sanitize": false,
-          "thresholds": [""],
+          "thresholds": [
+            ""
+          ],
           "type": "string",
           "unit": "short",
           "valueMaps": []
@@ -590,7 +635,9 @@
           "pattern": "statusCode",
           "preserveFormat": false,
           "sanitize": true,
-          "thresholds": [""],
+          "thresholds": [
+            ""
+          ],
           "type": "string",
           "unit": "short",
           "valueMaps": []
@@ -673,9 +720,12 @@
           "decimals": 2,
           "mappingType": 1,
           "pattern": "auth",
+          "preserveFormat": false,
+          "sanitize": true,
           "thresholds": [],
           "type": "string",
-          "unit": "short"
+          "unit": "short",
+          "valueMaps": []
         },
         {
           "alias": "Params",
@@ -714,33 +764,43 @@
         {
           "groupBy": [
             {
-              "params": ["errorStack"],
+              "params": [
+                "errorStack"
+              ],
               "type": "tag"
             },
             {
-              "params": ["errorMessage"],
+              "params": [
+                "errorMessage"
+              ],
               "type": "tag"
             },
             {
-              "params": ["path"],
+              "params": [
+                "path"
+              ],
               "type": "tag"
             },
             {
-              "params": ["url"],
+              "params": [
+                "url"
+              ],
               "type": "tag"
             }
           ],
           "measurement": "multilogger",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"host\", \"statusCode\", \"body\", \"auth\", \"params\", \"query\" FROM \"multilogger\" WHERE (\"statusCode\" =~ /^([45])/) AND $timeFilter GROUP BY \"errorStack\", \"errorMessage\", \"path\", \"url\"",
+          "query": "SELECT \"host\", \"statusCode\", \"path\", \"url\", \"body\", \"auth\", \"params\", \"query\" FROM \"multilogger\" WHERE (\"statusCode\" =~ /^([45])/) AND $timeFilter GROUP BY \"errorStack\", \"errorMessage\"  order by desc limit 1;",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
           "select": [
             [
               {
-                "params": ["host"],
+                "params": [
+                  "host"
+                ],
                 "type": "field"
               }
             ]
@@ -761,8 +821,132 @@
       "type": "table"
     },
     {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 15,
+      "interval": "",
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": true,
+        "min": true,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 3,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": ""
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_name",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "databaseMetrics",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT timing FROM \"databaseMetrics\" GROUP BY \"name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "timing"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Database Metrics",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "conppb",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "circleMaxSize": 30,
-      "circleMinSize": "1",
+      "circleMinSize": "5",
       "colors": [
         "rgba(245, 54, 54, 0.9)",
         "rgba(237, 129, 40, 0.89)",
@@ -775,9 +959,9 @@
       "esMetric": "metric",
       "gridPos": {
         "h": 21,
-        "w": 10,
+        "w": 9,
         "x": 0,
-        "y": 19
+        "y": 30
       },
       "hideEmpty": false,
       "hideZero": false,
@@ -804,21 +988,25 @@
         {
           "groupBy": [
             {
-              "params": ["geohash"],
+              "params": [
+                "geohash"
+              ],
               "type": "tag"
             }
           ],
           "measurement": "multilogger",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"requests\") AS \"metric\" FROM \"multilogger\" WHERE (\"geohash\"::tag != '' AND \"geohash\"::tag != '7zzzzzzzz' ) AND $timeFilter GROUP BY \"geohash\", \"country\"",
+          "query": "SELECT sum(\"requests\") AS \"metric\" FROM \"multilogger\" WHERE (\"geohash\"::tag != '' AND \"geohash\"::tag != '7zzzzzzzz' AND \"geohash\"::tag != ' ' ) AND $timeFilter GROUP BY \"geohash\", \"country\"",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
           "select": [
             [
               {
-                "params": ["responseTime"],
+                "params": [
+                  "responseTime"
+                ],
                 "type": "field"
               },
               {
@@ -826,7 +1014,9 @@
                 "type": "mean"
               },
               {
-                "params": ["metric"],
+                "params": [
+                  "metric"
+                ],
                 "type": "alias"
               }
             ]
@@ -860,18 +1050,19 @@
       "fill": 1,
       "gridPos": {
         "h": 11,
-        "w": 14,
-        "x": 10,
-        "y": 19
+        "w": 15,
+        "x": 9,
+        "y": 30
       },
       "id": 12,
+      "interval": "10s",
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": true,
-        "max": false,
-        "min": false,
-        "rightSide": false,
+        "max": true,
+        "min": true,
+        "rightSide": true,
         "show": true,
         "total": false,
         "values": true
@@ -881,7 +1072,7 @@
       "links": [],
       "nullPointMode": "null",
       "percentage": false,
-      "pointradius": 2,
+      "pointradius": 1,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
@@ -890,15 +1081,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "Memory Usage",
+          "alias": "$tag_osHost | Total memory: $tag_totalMemory GB",
           "groupBy": [
             {
-              "params": ["10s"],
-              "type": "time"
+              "params": [
+                "osHost"
+              ],
+              "type": "tag"
             },
             {
-              "params": ["linear"],
-              "type": "fill"
+              "params": [
+                "totalMemory"
+              ],
+              "type": "tag"
             }
           ],
           "measurement": "multilogger",
@@ -909,12 +1104,10 @@
           "select": [
             [
               {
-                "params": ["memoryUsage"],
+                "params": [
+                  "memoryUsage"
+                ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
               }
             ]
           ],
@@ -949,12 +1142,12 @@
           "show": true
         },
         {
-          "format": "short",
+          "format": "flowcms",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -964,6 +1157,7 @@
     },
     {
       "aliasColors": {
+        "CPU Usage": "light-blue",
         "Memory Usage": "light-blue"
       },
       "bars": false,
@@ -972,18 +1166,19 @@
       "fill": 1,
       "gridPos": {
         "h": 10,
-        "w": 14,
-        "x": 10,
-        "y": 30
+        "w": 15,
+        "x": 9,
+        "y": 41
       },
       "id": 13,
+      "interval": "10s",
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": true,
-        "max": false,
-        "min": false,
-        "rightSide": false,
+        "max": true,
+        "min": true,
+        "rightSide": true,
         "show": true,
         "total": false,
         "values": true
@@ -1002,15 +1197,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "Memory Usage",
+          "alias": "$tag_osHost",
           "groupBy": [
             {
-              "params": ["10s"],
-              "type": "time"
-            },
-            {
-              "params": ["linear"],
-              "type": "fill"
+              "params": [
+                "osHost"
+              ],
+              "type": "tag"
             }
           ],
           "measurement": "multilogger",
@@ -1021,12 +1214,10 @@
           "select": [
             [
               {
-                "params": ["cpuUsage"],
+                "params": [
+                  "cpuUsage"
+                ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "max"
               }
             ]
           ],
@@ -1084,7 +1275,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -1100,8 +1291,18 @@
       "2h",
       "1d"
     ],
-    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
   },
   "timezone": "",
-  "title": "Multilog"
+  "title": "Multilog",
 }
