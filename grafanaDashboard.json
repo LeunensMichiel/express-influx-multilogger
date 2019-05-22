@@ -559,7 +559,7 @@
       "datasource": "InfluxDB",
       "fontSize": "80%",
       "gridPos": {
-        "h": 10,
+        "h": 7,
         "w": 24,
         "x": 0,
         "y": 9
@@ -822,7 +822,7 @@
     },
     {
       "aliasColors": {},
-      "bars": true,
+      "bars": false,
       "dashLength": 10,
       "dashes": false,
       "fill": 1,
@@ -830,18 +830,23 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 16
       },
       "id": 15,
       "interval": "",
       "legend": {
         "alignAsTable": true,
-        "avg": false,
+        "avg": true,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": true,
         "min": true,
         "rightSide": true,
         "show": true,
+        "sideWidth": null,
+        "sort": "min",
+        "sortDesc": true,
         "total": false,
         "values": true
       },
@@ -867,22 +872,16 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "name"
               ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
+              "type": "tag"
             }
           ],
           "measurement": "databaseMetrics",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT timing FROM \"databaseMetrics\" GROUP BY \"name\"",
-          "rawQuery": true,
+          "query": "SELECT \"timing\" FROM \"databaseMetrics\" GROUP BY \"name\"",
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -892,10 +891,6 @@
                   "timing"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
               }
             ]
           ],
@@ -961,7 +956,7 @@
         "h": 21,
         "w": 9,
         "x": 0,
-        "y": 30
+        "y": 27
       },
       "hideEmpty": false,
       "hideZero": false,
@@ -1047,12 +1042,13 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "decimals": 2,
       "fill": 1,
       "gridPos": {
         "h": 11,
         "w": 15,
         "x": 9,
-        "y": 30
+        "y": 27
       },
       "id": 12,
       "interval": "10s",
@@ -1070,7 +1066,7 @@
       "lines": true,
       "linewidth": 1,
       "links": [],
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "percentage": false,
       "pointradius": 1,
       "points": false,
@@ -1081,7 +1077,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "$tag_osHost | Total memory: $tag_totalMemory GB",
+          "alias": "$tag_osHost | Total memory: $tag_memoryTotal GB",
           "groupBy": [
             {
               "params": [
@@ -1091,12 +1087,12 @@
             },
             {
               "params": [
-                "totalMemory"
+                "memoryTotal"
               ],
               "type": "tag"
             }
           ],
-          "measurement": "multilogger",
+          "measurement": "performance",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -1134,6 +1130,7 @@
       },
       "yaxes": [
         {
+          "decimals": null,
           "format": "decbytes",
           "label": "Usage",
           "logBase": 1,
@@ -1168,7 +1165,7 @@
         "h": 10,
         "w": 15,
         "x": 9,
-        "y": 41
+        "y": 38
       },
       "id": 13,
       "interval": "10s",
@@ -1206,7 +1203,7 @@
               "type": "tag"
             }
           ],
-          "measurement": "multilogger",
+          "measurement": "performance",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -1215,7 +1212,7 @@
             [
               {
                 "params": [
-                  "cpuUsage"
+                  "cpuLoad"
                 ],
                 "type": "field"
               }
@@ -1275,7 +1272,7 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -1304,5 +1301,5 @@
     ]
   },
   "timezone": "",
-  "title": "Multilog",
+  "title": "Multilog"
 }

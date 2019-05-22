@@ -10,11 +10,11 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
 ### Installation
 
 1. Install package
-   *  Npm
+   * Npm
    ```
    npm install express-influx-multilogger
    ```
-   *  Yarn
+   * Yarn
    ```
    yarn add express-influx-multilogger
    ```
@@ -30,7 +30,8 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
         name: "myMultilogDb",
         port: 8086
          },
-    interval: 10000
+    interval: 10000,
+    performance: true,
    });
    ```
 4. Add multilogger log function right before your router of choice
@@ -43,19 +44,19 @@ Parse important req, res and header objects to Influx and Grafana. Get an easier
    ```
 6. In case of using geolocation, make sure your server can make use of req.connection.remoteAddress
 7. You can also add extra custom metrics for monitoring other things, like your database calls
-   
-   Add this line in your code (make sure you require multilogger). Name and timing parameters are required. Custom is        optional.
+
+   Add this line in your code (make sure you require multilogger). Name and timing parameters are required. Custom is optional.
+
    ```
     multilogger.insertDatabaseCallSpeed({
       name: "Random name", // name of your metric (like a database call)
       timing: 0.2443, //in ms
       custom: {
-        customOption1: "dead",
+        customOption1: "foo",
         foo: foo.bar,
       }
     });
    ```
-
 ### Example
 
 ```
@@ -73,8 +74,10 @@ multilogger.init({
         name: "myMultilogDb",
         port: 8086
          },
-    interval: 10000 //  Write to Influx every 10 seconds
+    interval: 10000,  // Write to Influx every 10 seconds,
+    performance: true // Write host performance to Influx (mem, cpu,..)  
 });
+multilogger.startPerformanceMetrics();
 
 const app = express();
 
@@ -84,7 +87,6 @@ app.use(cookieParser());
 
 // Add this before your router of choice
 app.use(multilogger.log({ development: false, extended: false }));
-
 app.use("/", indexRouter); // Your router
 
 // Add this before 404 if you want to capture your errors as well
@@ -147,23 +149,35 @@ The data being sent to Influx consists of ...
 1. Extended: Logs a pretty view of req, res and headers (defaults false)
 2. Development: Logs the object that Influx will recieve
 3. Database:
-   - server: The address of your Influx database. _(defaults: 127.0.0.1)_
-   - name: Name of your Influx database. _(defaults: myMultilogDb)_
-   - port: Port of your Influx database. _(defaults: 3000)_
-   - username: Login credentials of your Influx database. _(defaults: '')_
-   - password: Password of your Influx database. _(defaults: '')_
+   * server: The address of your Influx database. _(defaults: 127.0.0.1)_
+   * name: Name of your Influx database. _(defaults: myMultilogDb)_
+   * port: Port of your Influx database. _(defaults: 3000)_
+   * username: Login credentials of your Influx database. _(defaults: '')_
+   * password: Password of your Influx database. _(defaults: '')_
 4. Interval: Defines the rate in ms of the interval you want to write your data to your Influx database
+
+### Reset Table
+
+What if you have sent wrong info to Influx? You can make use of the Influx-cli to drop your database or a certain metric or series (table)
+
+```
+> DROP DATABASE <db_name>
+> DROP MEASUREMENT <measurement_name>
+> DROP SERIES FROM <db_series>
+```
+
+For more info, you can check the [docs](https://docs.influxdata.com/influxdb/v1.7/query_language/database_management/).
 
 ### Grafana
 
-<img src="./img/screenshot.png" width="800"><br>
-<img src="./img/screenshot2.png" width="800">
+<img src="./img/basics.png" width="800"><br>
+<img src="./img/memory.png" width="800"><br>
+<img src="./img/requests.png" width="800">
 
 If you want to use Grafana and don't want to write your dashboard, you can import
 [the dashboard JSON](./grafanaDashboard.json). You can certainly write your own dashboard, as I'm not that skilled with Grafana.
 
-By using this dashboard, make sure you install [the worldmap plugin](https://grafana.com/plugins/grafana-worldmap-panel). 
-
+By using this dashboard, make sure you install [the worldmap plugin](https://grafana.com/plugins/grafana-worldmap-panel).
 
 ## License
 
@@ -171,12 +185,12 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Dependencies
 
-- [systeminformation](https://github.com/sebhildebrandt/systeminformation)
-- [lodash](https://lodash.com/)
-- [node-influx](https://www.npmjs.com/package/influx)
-- [ngeohash](https://www.npmjs.com/package/ngeohash)
-- [iplocation](https://www.npmjs.com/package/iplocation)
+* [systeminformation](https://github.com/sebhildebrandt/systeminformation)
+* [lodash](https://lodash.com/)
+* [node-influx](https://www.npmjs.com/package/influx)
+* [ngeohash](https://www.npmjs.com/package/ngeohash)
+* [iplocation](https://www.npmjs.com/package/iplocation)
 
 ## Contributors
 
-- [Michiel Cuvelier](https://github.com/cuvelierm)
+* [Michiel Cuvelier](https://github.com/cuvelierm)

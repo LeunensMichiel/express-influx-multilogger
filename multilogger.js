@@ -1,4 +1,6 @@
 let data = [];
+let databaseMetrics = [];
+let performanceMetrics = [];
 
 module.exports = {
   init: ({
@@ -10,7 +12,8 @@ module.exports = {
       password = "",
       port = 3000,
       username = ""
-    } = {}
+    } = {},
+    performance = true
   }) => {
     return databaseInitializer.initializer(
       server,
@@ -19,7 +22,8 @@ module.exports = {
       port,
       username,
       type,
-      interval
+      interval,
+      performance
     );
   },
   log: ({ extended = true, development = false }) => {
@@ -38,11 +42,27 @@ module.exports = {
     return data;
   },
   insertDatabaseCallSpeed: object => {
-    return logger.addToObject(object)
+    return logger.addToDbMetricsObject(object);
+  },
+  pushToDatabaseMetrics: object => {
+    return databaseMetrics.push(object);
+  },
+  getDatabaseMetrics: () => {
+    return databaseMetrics;
+  },
+  emptyDatabaseMetrics: () => {
+    return (databaseMetrics = []);
+  },
+  pushToPerformanceMetrics: object => {
+    return performanceMetrics.push(object);
+  },
+  getPerformanceMetrics: () => {
+    return performanceMetrics;
+  },
+  emptyPerformanceMetrics: () => {
+    return (performanceMetrics = []);
   }
 };
-
-const _ = require("lodash");
 
 const logger = require("./lib/Logger");
 const multiError = require("./lib/MultiError");
