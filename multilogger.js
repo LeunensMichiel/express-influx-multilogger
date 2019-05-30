@@ -6,14 +6,14 @@ module.exports = {
   init: ({
     interval = 1000,
     database: {
-      type = "influx",
-      server = "127.0.0.1",
-      name = "myMultilogDb",
-      password = "",
+      type = 'influx',
+      server = '127.0.0.1',
+      name = 'myMultilogDb',
+      password = '',
       port = 3000,
-      username = ""
+      username = '',
     } = {},
-    performance = true
+    performance = true,
   }) => {
     return databaseInitializer.initializer(
       server,
@@ -23,7 +23,7 @@ module.exports = {
       username,
       type,
       interval,
-      performance
+      performance,
     );
   },
   log: ({ extended = true, development = false }) => {
@@ -61,9 +61,9 @@ module.exports = {
   },
   emptyPerformanceMetrics: () => {
     return (performanceMetrics = []);
-  }
+  },
 };
 
-const logger = require("./lib/Logger");
-const multiError = require("./lib/MultiError");
-const databaseInitializer = require("./lib/DatabaseInitializer");
+const logger = require('./lib/Logger');
+const multiError = require('./lib/MultiError');
+const databaseInitializer = require('./lib/DatabaseInitializer');
