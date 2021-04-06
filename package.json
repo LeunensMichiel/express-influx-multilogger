@@ -22,7 +22,7 @@
     "iplocation": "^6.1.0",
     "lodash": "^4.17.11",
     "ngeohash": "^0.6.3",
-    "systeminformation": "^4.1.6"
+    "systeminformation": "^5.6.4"
   },
   "devDependencies": {
     "prettier": "^1.17.1",
